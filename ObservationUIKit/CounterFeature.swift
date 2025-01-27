@@ -8,13 +8,19 @@
 import Foundation
 import SwiftUI
 import Perception
+import SwiftUINavigation
 
 @Perceptible
 @MainActor
 class CounterModel {
     var count = 0
-    var fact: String?
+    var fact: Fact?
     var factIsLoading = false
+    
+    struct Fact: Identifiable {
+        let value: String
+        var id: String { value }
+    }
     
     func incrementButtonTapped() {
         count += 1
@@ -40,17 +46,22 @@ class CounterModel {
                 as: UTF8.self
             )
             withUIAnimation {
-                self.fact = loadedFact
+                self.fact = Fact(value: loadedFact)
             }
         } catch {
             // TODO: Handle error
         }
+        
+//        try? await Task.sleep(for: .seconds(3))
+//        fact = nil
     }
     
 }
 
 struct CounterView: View {
-    let model: CounterModel
+    
+    @Perception.Bindable var model: CounterModel
+    
     var body: some View {
         WithPerceptionTracking {
             Form {
@@ -58,9 +69,7 @@ struct CounterView: View {
                 Button("Decrement") { model.decrementButtonTapped() }
                 Button("Increment") { model.incrementButtonTapped() }
                 
-                if let fact = model.fact {
-                    Text(fact)
-                } else if model.factIsLoading {
+                if model.factIsLoading {
                     ProgressView().id(UUID())
                 }
                 
@@ -71,6 +80,17 @@ struct CounterView: View {
                 }
             }
             .disabled(model.factIsLoading)
+            .sheet(item: $model.fact) { fact in
+                Text(fact.value)
+            }
+//            .alert(
+//                item: $model.fact) { _ in
+//                    Text(model.count.description)
+//                } actions: { _ in
+//                } message: { fact in
+//                    Text(fact)
+//                }
+
         }
     }
 }
@@ -155,27 +175,50 @@ final class CounterViewController: UIViewController {
         
         countLabel.text = "\(model.count)"
         
-        observe { [weak self] in
+//        var ac: UIAlertController?
+        weak var factController: UIViewController?
+        
+        observe({ [weak self] in
             guard let self else { return }
             countLabel.text = "\(model.count)"
             
             activityIndicator.isHidden = !model.factIsLoading
-            factLabel.text = model.fact
-            factLabel.isHidden = model.fact == nil
             
             decrementButton.isEnabled = !model.factIsLoading
             incrementButton.isEnabled = !model.factIsLoading
             factButton.isEnabled = !model.factIsLoading
             
-            UIView.animate(withDuration: 0.3) {
-              if self.model.fact != nil {
-                factLabel.alpha = 1
-              } else {
-                factLabel.alpha = 0
-              }
+            navigationController?.pushViewController(item: model.fact) { fact in
+                FactViewController(fact: fact)
             }
-
-        }
+            
+            if let fact = model.fact, factController == nil {
+                let controller = FactViewController(fact: fact.value) { [weak self] in
+                    self?.model.fact = nil
+                }
+                factController = controller
+//                present(controller, animated: true)
+                navigationController?.pushViewController(controller, animated: true)
+            } else if model.fact == nil, factController != nil {
+                factController?.dismiss(animated: true)
+                factController = nil
+            }
+            
+//            if let fact = model.fact, ac == nil {
+//                ac = UIAlertController(
+//                    title: model.count.description,
+//                    message: fact.value,
+//                    preferredStyle: .alert
+//                )
+//                ac!.addAction(UIAlertAction(title: "Ok", style: .default, handler: { _ in
+//                    self.model.fact = nil
+//                }))
+//                present(ac!, animated: true)
+//            } else if model.fact == nil, ac != nil {
+//                ac?.dismiss(animated: true)
+//                ac = nil
+//            }
+        })
     }
 }
 
@@ -197,6 +240,45 @@ struct UIViewControllerRepresenting<UIViewControllerType: UIViewController>: UIV
         _ uiViewController: UIViewControllerType,
         context: Context
     ) {}
+}
+
+class FactViewController: UIViewController {
+    let fact: String
+    
+    init(fact: String) {
+        self.fact = fact
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        view.backgroundColor = .white
+        let factLabel = UILabel()
+        factLabel.text = fact
+        factLabel.numberOfLines = 0
+        factLabel
+            .translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(factLabel)
+        NSLayoutConstraint.activate([
+            factLabel.leadingAnchor.constraint(
+                equalTo: view.safeAreaLayoutGuide.leadingAnchor
+            ),
+            factLabel.topAnchor.constraint(
+                equalTo: view.safeAreaLayoutGuide.topAnchor
+            ),
+            factLabel.bottomAnchor.constraint(
+                equalTo: view.safeAreaLayoutGuide.bottomAnchor
+            ),
+            factLabel.trailingAnchor.constraint(
+                equalTo: view.safeAreaLayoutGuide.trailingAnchor
+            ),
+        ])
+    }
 }
 
 

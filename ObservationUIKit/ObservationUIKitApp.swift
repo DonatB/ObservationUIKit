@@ -9,13 +9,17 @@ import SwiftUI
 
 @main
 struct ObservationUIKitApp: App {
+    
     var body: some Scene {
         WindowGroup {
 //            CounterView(model: CounterModel())
-            
             UIViewControllerRepresenting {
-                CounterViewController(model: CounterModel())
+                UINavigationController(
+                    rootViewController: CounterViewController(model: CounterModel())
+                )
             }
+            
         }
+        
     }
 }

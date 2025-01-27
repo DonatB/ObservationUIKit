@@ -9,6 +9,9 @@
 /* Begin PBXBuildFile section */
 		F5D58AE52D43D280007D16C9 /* Perception in Frameworks */ = {isa = PBXBuildFile; productRef = F5D58AE42D43D280007D16C9 /* Perception */; };
 		F5D58AE72D43D280007D16C9 /* PerceptionCore in Frameworks */ = {isa = PBXBuildFile; productRef = F5D58AE62D43D280007D16C9 /* PerceptionCore */; };
+		F5D58AFB2D479AEA007D16C9 /* SwiftNavigation in Frameworks */ = {isa = PBXBuildFile; productRef = F5D58AFA2D479AEA007D16C9 /* SwiftNavigation */; };
+		F5D58AFD2D479AEA007D16C9 /* SwiftUINavigation in Frameworks */ = {isa = PBXBuildFile; productRef = F5D58AFC2D479AEA007D16C9 /* SwiftUINavigation */; };
+		F5D58AFF2D479AEA007D16C9 /* UIKitNavigation in Frameworks */ = {isa = PBXBuildFile; productRef = F5D58AFE2D479AEA007D16C9 /* UIKitNavigation */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -41,8 +44,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F5D58AFD2D479AEA007D16C9 /* SwiftUINavigation in Frameworks */,
+				F5D58AFB2D479AEA007D16C9 /* SwiftNavigation in Frameworks */,
 				F5D58AE72D43D280007D16C9 /* PerceptionCore in Frameworks */,
 				F5D58AE52D43D280007D16C9 /* Perception in Frameworks */,
+				F5D58AFF2D479AEA007D16C9 /* UIKitNavigation in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -87,6 +93,9 @@
 			packageProductDependencies = (
 				F5D58AE42D43D280007D16C9 /* Perception */,
 				F5D58AE62D43D280007D16C9 /* PerceptionCore */,
+				F5D58AFA2D479AEA007D16C9 /* SwiftNavigation */,
+				F5D58AFC2D479AEA007D16C9 /* SwiftUINavigation */,
+				F5D58AFE2D479AEA007D16C9 /* UIKitNavigation */,
 			);
 			productName = ObservationUIKit;
 			productReference = F51010B52D42410C0030ADB7 /* ObservationUIKit.app */;
@@ -118,6 +127,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				F5D58AE32D43D280007D16C9 /* XCRemoteSwiftPackageReference "swift-perception" */,
+				F5D58AF92D479AEA007D16C9 /* XCRemoteSwiftPackageReference "swift-navigation" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = F51010B62D42410C0030ADB7 /* Products */;
@@ -286,7 +296,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -318,7 +328,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -365,6 +375,14 @@
 				minimumVersion = 1.4.2;
 			};
 		};
+		F5D58AF92D479AEA007D16C9 /* XCRemoteSwiftPackageReference "swift-navigation" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/pointfreeco/swift-navigation";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.2.3;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -377,6 +395,21 @@
 			isa = XCSwiftPackageProductDependency;
 			package = F5D58AE32D43D280007D16C9 /* XCRemoteSwiftPackageReference "swift-perception" */;
 			productName = PerceptionCore;
+		};
+		F5D58AFA2D479AEA007D16C9 /* SwiftNavigation */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F5D58AF92D479AEA007D16C9 /* XCRemoteSwiftPackageReference "swift-navigation" */;
+			productName = SwiftNavigation;
+		};
+		F5D58AFC2D479AEA007D16C9 /* SwiftUINavigation */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F5D58AF92D479AEA007D16C9 /* XCRemoteSwiftPackageReference "swift-navigation" */;
+			productName = SwiftUINavigation;
+		};
+		F5D58AFE2D479AEA007D16C9 /* UIKitNavigation */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F5D58AF92D479AEA007D16C9 /* XCRemoteSwiftPackageReference "swift-navigation" */;
+			productName = UIKitNavigation;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
