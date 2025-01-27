@@ -11,7 +11,11 @@ import SwiftUI
 struct ObservationUIKitApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+//            CounterView(model: CounterModel())
+            
+            UIViewControllerRepresenting {
+                CounterViewController(model: CounterModel())
+            }
         }
     }
 }
