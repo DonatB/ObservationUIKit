@@ -14,7 +14,12 @@ import SwiftUINavigation
 @MainActor
 class CounterModel {
     var count = 0
-    var fact: Fact?
+    var fact: Fact? {
+        didSet {
+            print(fact)
+        }
+    }
+    var secondaryFact: Fact?
     var factIsLoading = false
     
     struct Fact: Identifiable {
@@ -45,15 +50,27 @@ class CounterModel {
                     .data(from: URL(string: "http://numberapi.com/\(count)")!).0,
                 as: UTF8.self
             )
-            withUIAnimation {
-                self.fact = Fact(value: loadedFact)
-            }
+            self.fact = Fact(value: loadedFact)
+            try? await Task.sleep(for: .seconds(2))
+            self.secondaryFact = try await Fact(
+                value:
+                    String(
+                        decoding: URLSession.shared.data(
+                            from: URL(
+                                string: "http://www.numberapi.com/\(count)"
+                            )!
+                        )
+                        .0,
+                        as: UTF8.self
+                    )
+            )
+            
         } catch {
-            // TODO: Handle error
+        // TODO: Handle error
         }
         
-        try? await Task.sleep(for: .seconds(3))
-        fact = nil
+//        try? await Task.sleep(for: .seconds(3))
+//        fact = nil
     }
     
 }
@@ -100,7 +117,7 @@ struct CounterView: View {
 }
 
 final class CounterViewController: UIViewController {
-    let model: CounterModel
+    @Perception.Bindable var model: CounterModel
     
     init(model: CounterModel) {
         self.model = model
@@ -189,20 +206,25 @@ final class CounterViewController: UIViewController {
 //                FactViewController(fact: fact)
 //            }
             
-            present(item: model.fact) { fact in
-                FactViewController(fact: fact.value)
-            }
+//            present(item: self.$model.fact) { fact in
+//                FactViewController(fact: fact.value)
+//            }
             
-//            present(item: model.fact) { fact in
-//                let ac = UIAlertController(
-//                    title: model.count.description,
-//                    message: fact.value,
-//                    preferredStyle: .alert
-//                )
-//                ac!.addAction(UIAlertAction(title: "Ok", style: .default))
-//                return ac
+//            present(item: $model.fact) { fact in
+//                let controller = FactViewController(fact: fact.value)
 //            }
         })
+//        present(item: self.$model.fact) { fact in
+//            FactViewController(fact: fact.value)
+//        }
+        
+        navigationController?.pushViewController(item: self.$model.fact) { fact in
+            FactViewController(fact: fact.value)
+        }
+        
+        navigationController?.pushViewController(item: self.$model.secondaryFact) { fact in
+            FactViewController(fact: fact.value)
+        }
     }
 }
 
