@@ -52,8 +52,8 @@ class CounterModel {
             // TODO: Handle error
         }
         
-//        try? await Task.sleep(for: .seconds(3))
-//        fact = nil
+        try? await Task.sleep(for: .seconds(3))
+        fact = nil
     }
     
 }
@@ -175,9 +175,6 @@ final class CounterViewController: UIViewController {
         
         countLabel.text = "\(model.count)"
         
-//        var ac: UIAlertController?
-        weak var factController: UIViewController?
-        
         observe({ [weak self] in
             guard let self else { return }
             countLabel.text = "\(model.count)"
@@ -188,35 +185,22 @@ final class CounterViewController: UIViewController {
             incrementButton.isEnabled = !model.factIsLoading
             factButton.isEnabled = !model.factIsLoading
             
-            navigationController?.pushViewController(item: model.fact) { fact in
-                FactViewController(fact: fact)
+//            navigationController?.pushViewController(item: model.fact) { fact in
+//                FactViewController(fact: fact)
+//            }
+            
+            present(item: model.fact) { fact in
+                FactViewController(fact: fact.value)
             }
             
-            if let fact = model.fact, factController == nil {
-                let controller = FactViewController(fact: fact.value) { [weak self] in
-                    self?.model.fact = nil
-                }
-                factController = controller
-//                present(controller, animated: true)
-                navigationController?.pushViewController(controller, animated: true)
-            } else if model.fact == nil, factController != nil {
-                factController?.dismiss(animated: true)
-                factController = nil
-            }
-            
-//            if let fact = model.fact, ac == nil {
-//                ac = UIAlertController(
+//            present(item: model.fact) { fact in
+//                let ac = UIAlertController(
 //                    title: model.count.description,
 //                    message: fact.value,
 //                    preferredStyle: .alert
 //                )
-//                ac!.addAction(UIAlertAction(title: "Ok", style: .default, handler: { _ in
-//                    self.model.fact = nil
-//                }))
-//                present(ac!, animated: true)
-//            } else if model.fact == nil, ac != nil {
-//                ac?.dismiss(animated: true)
-//                ac = nil
+//                ac!.addAction(UIAlertAction(title: "Ok", style: .default))
+//                return ac
 //            }
         })
     }
